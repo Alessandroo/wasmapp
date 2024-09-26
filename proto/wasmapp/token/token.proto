@@ -1,0 +1,11 @@
+syntax = "proto3";
+package wasmapp.token;
+
+option go_package = "wasmapp/x/token/types";
+
+message Token {
+  
+  string name = 1; 
+  string symbol = 2; 
+  int32 supply = 3; 
+}
