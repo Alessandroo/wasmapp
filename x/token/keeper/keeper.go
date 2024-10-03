@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 
 	"cosmossdk.io/core/store"

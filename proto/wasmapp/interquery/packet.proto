@@ -1,0 +1,13 @@
+syntax = "proto3";
+package wasmapp.interquery;
+
+option go_package = "wasmapp/x/interquery/types";
+
+message InterqueryPacketData {
+    oneof packet {
+        NoData noData = 1;
+    }
+}
+
+message NoData {
+}

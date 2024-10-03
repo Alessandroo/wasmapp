@@ -2,8 +2,9 @@ package token
 
 import (
 	"context"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"wasmapp/x/token/keeper"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (

@@ -38,6 +38,9 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
 	// this line is used by starport scaffolding # ibc/app/import
+	interquerymodule "wasmapp/x/interquery/module"
+	interquerymoduletypes "wasmapp/x/interquery/types"
+
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
@@ -169,6 +172,8 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 	}
 	ibcRouter.AddRoute(wasmtypes.ModuleName, wasmStack)
 
+	interqueryIBCModule := ibcfee.NewIBCMiddleware(interquerymodule.NewIBCModule(app.InterqueryKeeper), app.IBCFeeKeeper)
+	ibcRouter.AddRoute(interquerymoduletypes.ModuleName, interqueryIBCModule)
 	// this line is used by starport scaffolding # ibc/app/module
 
 	app.IBCKeeper.SetRouter(ibcRouter)

@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"wasmapp/x/token/keeper"
+	"wasmapp/x/token/types"
+
 	"cosmossdk.io/core/appmodule"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -12,8 +15,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"wasmapp/x/token/keeper"
-	"wasmapp/x/token/types"
 )
 
 var (
