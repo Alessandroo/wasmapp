@@ -4,11 +4,12 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/types/query"
 )
 
 var _ sdk.Msg = &MsgSendQueryAllBalances{}
 
-func NewMsgSendQueryAllBalances(creator string, channelId string, address string, pagination string) *MsgSendQueryAllBalances {
+func NewMsgSendQueryAllBalances(creator string, channelId string, address string, pagination *query.PageRequest) *MsgSendQueryAllBalances {
 	return &MsgSendQueryAllBalances{
 		Creator:    creator,
 		ChannelId:  channelId,

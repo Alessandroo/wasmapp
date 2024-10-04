@@ -7,6 +7,7 @@ import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "wasmapp/interquery/params.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
 
 option go_package = "wasmapp/x/interquery/types";
 
@@ -42,7 +43,7 @@ message MsgSendQueryAllBalances {
   string creator    = 1;
   string channelId  = 2;
   string address    = 3;
-  string pagination = 4;
+  cosmos.base.query.v1beta1.PageRequest pagination = 4;
 }
 
 message MsgSendQueryAllBalancesResponse {}
