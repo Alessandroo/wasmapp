@@ -28,6 +28,12 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod: "UpdateParams",
 					Skip:      true, // skipped because authority gated
 				},
+				{
+					RpcMethod:      "SendQueryAllBalances",
+					Use:            "send-query-all-balances [channel-id] [address] [pagination]",
+					Short:          "Send a sendQueryAllBalances tx",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "channelId"}, {ProtoField: "address"}, {ProtoField: "pagination"}},
+				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},
 		},
