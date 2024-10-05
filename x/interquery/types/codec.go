@@ -28,3 +28,29 @@ var (
 	// defined at the application level.
 	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
 )
+
+func SerializeCosmosQuery(reqs []RequestQuery) (bz []byte, err error) {
+	q := &CosmosQuery{
+		Requests: reqs,
+	}
+	return ModuleCdc.Marshal(q)
+}
+
+func DeserializeCosmosQuery(bz []byte) (reqs []RequestQuery, err error) {
+	var q CosmosQuery
+	err = ModuleCdc.Unmarshal(bz, &q)
+	return q.Requests, err
+}
+
+func SerializeCosmosResponse(resps []ResponseQuery) (bz []byte, err error) {
+	r := &CosmosResponse{
+		Responses: resps,
+	}
+	return ModuleCdc.Marshal(r)
+}
+
+func DeserializeCosmosResponse(bz []byte) (resps []ResponseQuery, err error) {
+	var r CosmosResponse
+	err = ModuleCdc.Unmarshal(bz, &r)
+	return r.Responses, err
+}

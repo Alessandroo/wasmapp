@@ -46,5 +46,7 @@ message MsgSendQueryAllBalances {
   cosmos.base.query.v1beta1.PageRequest pagination = 4;
 }
 
-message MsgSendQueryAllBalancesResponse {}
+message MsgSendQueryAllBalancesResponse {
+  uint64 sequence = 1;
+}
 

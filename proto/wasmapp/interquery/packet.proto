@@ -1,13 +1,79 @@
 syntax = "proto3";
 package wasmapp.interquery;
 
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
 option go_package = "wasmapp/x/interquery/types";
 
-message InterqueryPacketData {
-    oneof packet {
-        NoData noData = 1;
-    }
+// InterchainQueryRequest
+message InterchainQueryRequest {
+    bytes data = 1;
+    string path = 2;
 }
 
-message NoData {
+// InterchainQueryPacketData is comprised of raw query.
+message InterchainQueryPacketData {
+    bytes data = 1;
+    // optional memo
+    string memo = 2;
+}
+
+// InterchainQueryPacketAck is comprised of an ABCI query response with
+// non-deterministic fields left empty (e.g. Codespace, Log, Info and ...).
+message InterchainQueryPacketAck { bytes data = 1; }
+
+// InterchainQueryRequestPacket
+message InterchainQueryRequestPacket {
+    repeated InterchainQueryRequest requests = 1 [ (gogoproto.nullable) = false ];
+}
+
+// CosmosQuery contains a list of tendermint ABCI query requests. It should be
+// used when sending queries to an SDK host chain.
+message CosmosQuery {
+    repeated RequestQuery requests = 1
+    [ (gogoproto.nullable) = false ];
+}
+
+// CosmosResponse contains a list of tendermint ABCI query responses. It should
+// be used when receiving responses from an SDK host chain.
+message CosmosResponse {
+    repeated ResponseQuery responses = 1
+    [ (gogoproto.nullable) = false ];
+}
+
+// RequestQuery is a request to query the application state.
+message RequestQuery {
+    bytes  data   = 1;
+    string path   = 2;
+    int64  height = 3;
+    bool   prove  = 4;
+}
+
+// ResponseQuery contains the ABCI application data along with a proof.
+message ResponseQuery {
+    uint32 code = 1;
+    // bytes data = 2; // use "value" instead.
+    string                      log       = 3;  // nondeterministic
+    string                      info      = 4;  // nondeterministic
+    int64                       index     = 5;
+    bytes                       key       = 6;
+    bytes                       value     = 7;
+    ProofOps proof_ops = 8;
+    int64                       height    = 9;
+    string                      codespace = 10;
+}
+
+// ProofOp defines an operation used for calculating Merkle root
+// The data could be arbitrary format, providing necessary data
+// for example neighbouring node hash
+message ProofOp {
+    string type = 1;
+    bytes  key  = 2;
+    bytes  data = 3;
+}
+
+// ProofOps is Merkle proof defined by the list of ProofOps
+message ProofOps {
+    repeated ProofOp ops = 1 [(gogoproto.nullable) = false];
 }
