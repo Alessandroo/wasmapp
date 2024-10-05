@@ -7,6 +7,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 )
 
+const TypeMsgSendQueryAllBalances = "send_query_all_balances"
+
 var _ sdk.Msg = &MsgSendQueryAllBalances{}
 
 func NewMsgSendQueryAllBalances(creator string, channelId string, address string, pagination *query.PageRequest) *MsgSendQueryAllBalances {
@@ -16,6 +18,27 @@ func NewMsgSendQueryAllBalances(creator string, channelId string, address string
 		Address:    address,
 		Pagination: pagination,
 	}
+}
+
+func (msg *MsgSendQueryAllBalances) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgSendQueryAllBalances) Type() string {
+	return TypeMsgSendQueryAllBalances
+}
+
+func (msg *MsgSendQueryAllBalances) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgSendQueryAllBalances) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
 }
 
 func (msg *MsgSendQueryAllBalances) ValidateBasic() error {

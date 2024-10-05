@@ -30,9 +30,9 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "SendQueryAllBalances",
-					Use:            "send-query-all-balances [channel-id] [address] [pagination]",
-					Short:          "Send a sendQueryAllBalances tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "channelId"}, {ProtoField: "address"}, {ProtoField: "pagination"}},
+					Use:            "send-query-all-balances [channel-id] [address]",
+					Short:          "Query the balances of an account on the remote chain via ICQ",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "channelId"}, {ProtoField: "address"}},
 				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},

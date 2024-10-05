@@ -124,24 +124,24 @@ func (k Keeper) OnAcknowledgementPacket(
 			return errorsmod.Wrapf(err, "failed to unmarshal interchain query response to type %T", resp)
 		}
 
-		//k.SetQueryResponse(ctx, modulePacket.Sequence, r)
-		//k.SetLastQueryPacketSeq(ctx, modulePacket.Sequence)
-		//
-		//ctx.EventManager().EmitEvent(
-		//	sdk.NewEvent(
-		//		types.EventTypeQueryResult,
-		//		sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
-		//	),
-		//)
+		k.SetQueryResponse(ctx, modulePacket.Sequence, r)
+		k.SetLastQueryPacketSeq(ctx, modulePacket.Sequence)
 
-		//k.Logger().Info("interchain query response", "sequence", modulePacket.Sequence, "response", r)
+		ctx.EventManager().EmitEvent(
+			sdk.NewEvent(
+				types.EventTypeQueryResult,
+				sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
+			),
+		)
+
+		k.Logger().Info("interchain query response", "sequence", modulePacket.Sequence, "response", r)
 	case *channeltypes.Acknowledgement_Error:
-		//ctx.EventManager().EmitEvent(
-		//	sdk.NewEvent(
-		//		types.EventTypeQueryResult,
-		//		sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
-		//	),
-		//)
+		ctx.EventManager().EmitEvent(
+			sdk.NewEvent(
+				types.EventTypeQueryResult,
+				sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
+			),
+		)
 
 		k.Logger().Error("interchain query response", "sequence", modulePacket.Sequence, "error", resp.Error)
 	}
