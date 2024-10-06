@@ -26,9 +26,6 @@ func (k Keeper) SendQuery(
 		return 0, errorsmod.Wrapf(channeltypes.ErrChannelNotFound, "port ID (%s) channel ID (%s)", sourcePort, sourceChannel)
 	}
 
-	//destinationPort := sourceChannelEnd.GetCounterparty().GetPortID()
-	//destinationChannel := sourceChannelEnd.GetCounterparty().GetChannelID()
-
 	data, err := types.SerializeCosmosQuery(reqs)
 	if err != nil {
 		return 0, errorsmod.Wrap(err, "could not serialize reqs into cosmos query")
@@ -47,64 +44,15 @@ func (k Keeper) SendQuery(
 	k.Logger().Info("SendInterchainQuery: ", "sequence", sequence)
 
 	return sequence, nil
-
-	// return k.createOutgoingPacket(ctx, sourcePort, sourceChannel, destinationPort, destinationChannel, chanCap, icqPacketData, timeoutTimestamp)
 }
-
-//func (k Keeper) createOutgoingPacket(
-//	ctx sdk.Context,
-//	sourcePort,
-//	sourceChannel,
-//	destinationPort,
-//	destinationChannel string,
-//	chanCap *capabilitytypes.Capability,
-//	icqPacketData icqtypes.InterchainQueryPacketData,
-//	timeoutTimestamp uint64,
-//) (uint64, error) {
-//	return k.ics4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, clienttypes.ZeroHeight(), timeoutTimestamp, icqPacketData.GetBytes())
-//	if err := icqPacketData.ValidateBasic(); err != nil {
-//		return 0, errorsmod.Wrap(err, "invalid interchain query packet data")
-//	}
-//
-//	// get the next sequence
-//	sequence, found := k.channelKeeper.GetNextSequenceSend(ctx, sourcePort, sourceChannel)
-//	if !found {
-//		return 0, errorsmod.Wrapf(channeltypes.ErrSequenceSendNotFound, "failed to retrieve next sequence send for channel %s on port %s", sourceChannel, sourcePort)
-//	}
-//
-//	packet := channeltypes.NewPacket(
-//		icqPacketData.GetBytes(),
-//		sequence,
-//		sourcePort,
-//		sourceChannel,
-//		destinationPort,
-//		destinationChannel,
-//		clienttypes.ZeroHeight(),
-//		timeoutTimestamp,
-//	)
-//
-//	//	func (k Keeper) SendPacket(
-//	//		ctx sdk.Context,
-//	//		channelCap *capabilitytypes.Capability,
-//	//		sourcePort string,
-//	//		sourceChannel string,
-//	//		timeoutHeight clienttypes.Height,
-//	//		timeoutTimestamp uint64,
-//	//		data []byte,
-//	//) (uint64, error)
-//
-//	if err := k.ics4Wrapper.SendPacket(ctx, chanCap, packet); err != nil {
-//		return 0, err
-//	}
-//
-//	return packet.Sequence, nil
-//}
 
 func (k Keeper) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	modulePacket channeltypes.Packet,
 	ack channeltypes.Acknowledgement,
 ) error {
+	k.Logger().Info("Receive OnAcknowledgementPacket", "modulePacket", modulePacket)
+	k.Logger().Info("Receive ack", "ack", ack)
 	switch resp := ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Result:
 		var ackData types.InterchainQueryPacketAck
@@ -120,7 +68,7 @@ func (k Keeper) OnAcknowledgementPacket(
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "no responses in interchain query packet ack")
 		}
 
-		var r banktypes.QueryAllBalancesResponse
+		var r banktypes.QueryBalanceResponse
 		if err := k.cdc.Unmarshal(resps[0].Value, &r); err != nil {
 			return errorsmod.Wrapf(err, "failed to unmarshal interchain query response to type %T", resp)
 		}

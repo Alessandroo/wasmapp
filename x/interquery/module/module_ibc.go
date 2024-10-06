@@ -1,8 +1,6 @@
 package interquery
 
 import (
-	"fmt"
-
 	"wasmapp/x/interquery/keeper"
 	"wasmapp/x/interquery/types"
 
@@ -42,6 +40,9 @@ func (im IBCModule) OnChanOpenInit(
 
 	// Require portID is the portID module is bound to
 	boundPort := im.keeper.GetPort(ctx)
+
+	im.keeper.Logger().Error("OnChanOpenInit error", "error", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort))
+
 	if boundPort != portID {
 		return "", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
@@ -175,49 +176,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet acknowledgement: %v", err)
 	}
 
-	// this line is used by starport scaffolding # oracle/packet/module/ack
-
-	var modulePacketData types.InterchainQueryPacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
-		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
-	}
-
-	var eventType string
-
-	// Dispatch packet
-	//switch packet := modulePacketData.Packet.(type) {
-	//// this line is used by starport scaffolding # ibc/packet/module/ack
-	//default:
-	//	errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-	//	return errorsmod.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
-	//}
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			eventType,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-			sdk.NewAttribute(types.AttributeKeyAck, fmt.Sprintf("%v", ack)),
-		),
-	)
-
-	switch resp := ack.Response.(type) {
-	case *channeltypes.Acknowledgement_Result:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				eventType,
-				sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
-			),
-		)
-	case *channeltypes.Acknowledgement_Error:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				eventType,
-				sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
-			),
-		)
-	}
-
-	return nil
+	return im.keeper.OnAcknowledgementPacket(ctx, modulePacket, ack)
 }
 
 // OnTimeoutPacket implements the IBCModule interface

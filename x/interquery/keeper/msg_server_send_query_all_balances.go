@@ -17,19 +17,24 @@ func (k msgServer) SendQueryAllBalances(goCtx context.Context, msg *types.MsgSen
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	k.Logger().Info("Receive MsgSendQueryAllBalances message: ", "msg", msg)
+	k.Logger().Info("Module port", "port", k.GetPort(ctx))
+	k.Logger().Info("ChannelCapabilityPath", "channelPath", host.ChannelCapabilityPath(k.GetPort(ctx), msg.ChannelId))
 
 	chanCap, found := k.ScopedKeeper().GetCapability(ctx, host.ChannelCapabilityPath(k.GetPort(ctx), msg.ChannelId))
+	k.Logger().Info("GetCapability", "found", found)
+	k.Logger().Info("GetCapability", "chanCap", chanCap)
+
 	if !found {
 		return nil, errorsmod.Wrap(channeltypes.ErrChannelCapabilityNotFound, "module does not own channel capability")
 	}
 
-	q := banktypes.QueryAllBalancesRequest{
-		Address:    msg.Address,
-		Pagination: msg.Pagination,
+	q := banktypes.QueryBalanceRequest{
+		Address: msg.Address,
+		Denom:   "uosmo",
 	}
 	reqs := []types.RequestQuery{
 		{
-			Path: "/cosmos.bank.v1beta1.Query/AllBalances",
+			Path: "/cosmos.bank.v1beta1.Query/Balance",
 			Data: k.cdc.MustMarshal(&q),
 		},
 	}

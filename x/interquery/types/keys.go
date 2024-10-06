@@ -17,7 +17,7 @@ const (
 	MemStoreKey = "mem_interquery"
 
 	// Version defines the current version the IBC module supports
-	Version = "interquery-1"
+	Version = "icq-1"
 
 	// PortID is the default port id that module binds to
 	PortID = "interquery"

@@ -5,10 +5,13 @@ accounts:
   coins:
   - 20000token
   - 200000000stake
+  mnemonic: "lonely nest leisure nose arrange apple burst manage asset arctic property economy nest wall few royal ritual october omit earn base anchor globe chase"
 - name: bob
   coins:
   - 10000token
   - 100000000stake
+  mnemonic: "increase bread alpha rigid glide amused approve oblige print asset idea enact lawn proof unfold jeans rabbit audit return chuckle valve rather cactus great"
+
 client:
   openapi:
     path: docs/static/openapi.yml
