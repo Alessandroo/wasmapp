@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"wasmapp/x/interquery/types"
+
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -8,7 +10,6 @@ import (
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
-	"wasmapp/x/interquery/types"
 )
 
 func (k Keeper) SendQuery(

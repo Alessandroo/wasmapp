@@ -17,6 +17,13 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Use:       "params",
 					Short:     "Shows the parameters of the module",
 				},
+				{
+					RpcMethod:      "QueryIcqState",
+					Use:            "query-icq-state [sequence]",
+					Short:          "Returns the request and response of an ICQ query given the packet sequence",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "sequence"}},
+				},
+
 				// this line is used by ignite scaffolding # autocli/query
 			},
 		},

@@ -1,10 +1,11 @@
 package keeper
 
 import (
+	"wasmapp/x/interquery/types"
+
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	gogotypes "github.com/gogo/protobuf/types"
-	"wasmapp/x/interquery/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
