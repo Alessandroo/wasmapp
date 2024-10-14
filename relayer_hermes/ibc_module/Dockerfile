@@ -14,17 +14,17 @@ RUN rustup default nightly && rustup update
 RUN cargo install ibc-relayer-cli@1.0.0 --bin hermes --locked
 
 # Copy config file
-COPY ./config.toml /root/.hermes/config.toml
+COPY config.toml /root/.hermes/config.toml
 
 # Validate the config file during image building
 RUN hermes config validate
 
 # Copy mnemonic files
-COPY ./alice.json /home/hermes/alice.json
-COPY ./bob.json /home/hermes/bob.json
+COPY alice.json /home/hermes/alice.json
+COPY bob.json /home/hermes/bob.json
 
 # Copy entrypoint script
-COPY ./run-relayer.sh /home/hermes/
+COPY run-relayer.sh /home/hermes/
 
 # Set permission
 RUN chmod +x ./run-relayer.sh
